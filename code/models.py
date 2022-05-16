@@ -167,7 +167,7 @@ def get_CLR_training_components(hparams_CLR):
 def train_CLR(model, criterion, optimizer, dataloader, verbose = True):
     losses = []
     if verbose:
-        for i, batch in tqdm(enumerate(dataloader)):
+        for i, batch in enumerate(dataloader):
             X, Y = batch
             X = X.cuda(non_blocking=True)
             Y = Y.cuda(non_blocking=True)
@@ -207,7 +207,7 @@ def fit_CLR(hparams_CLR, output_folder, verbose=False):
 
     ## main fit steps
     total_losses = []
-    for epoch in tqdm(range(hparams_CLR.epochs)):
+    for epoch in range(hparams_CLR.epochs):
         # 1. train
         losses = train_CLR(model_CLR, criterion_CLR, optimizer_CLR, dataloader_CLR, verbose=False)      # one buttom to control
         # update lr
@@ -225,8 +225,8 @@ def fit_CLR(hparams_CLR, output_folder, verbose=False):
     ## record losses
     total_losses = np.array(total_losses).flatten()
     np.save(output_folder + '/losses_CLR.npy', total_losses)
-    if verbose:
-        plot_losses(total_losses.shape[0], total_losses, 'iterations', 'loss', 'total losses')
+    # if verbose:
+    #     plot_losses(total_losses.shape[0], total_losses, 'iterations', 'loss', 'total losses')
     return model_CLR, total_losses
 
 #===================================
@@ -329,7 +329,7 @@ def get_CLS_training_components(hparams_CLS):
 def train_CLS(model, criterion, optimizer, dataloader, verbose = True):
     losses = []
     if verbose:
-        for i, batch in tqdm(enumerate(dataloader)):
+        for i, batch in enumerate(dataloader):
             X, Y = batch
             X = X.cuda(non_blocking=True)
             Y = Y.cuda(non_blocking=True)
@@ -361,13 +361,13 @@ def train_CLS(model, criterion, optimizer, dataloader, verbose = True):
             optimizer.step()
     return losses
     
-def fit_CLS(hparams_CLR, output_folder, verbose=False):
+def fit_CLS(hparams_CLS, output_folder, verbose=False):
     ## get training components with hparams
     model_CLS, criterion_CLS, optimizer_CLS, scheduler_CLS, dataloader_CLS = get_CLS_training_components(hparams_CLS)
 
     ## main fit steps
     total_losses = []
-    for epoch in tqdm(range(hparams_CLS.epochs)):
+    for epoch in range(hparams_CLS.epochs):
         # 1. train
         losses = train_CLS(model_CLS, criterion_CLS, optimizer_CLS, dataloader_CLS, verbose=False)
         # update lr
@@ -385,8 +385,8 @@ def fit_CLS(hparams_CLR, output_folder, verbose=False):
     ## record losses
     total_losses = np.array(total_losses).flatten()
     np.save(output_folder + '/losses_CLS.npy', total_losses)
-    if verbose:
-        plot_losses(total_losses.shape[0], total_losses, 'iterations', 'loss', 'total losses')
+    # if verbose:
+    #     plot_losses(total_losses.shape[0], total_losses, 'iterations', 'loss', 'total losses')
     return model_CLS, total_losses
     
 #===================================
@@ -536,7 +536,7 @@ def train_FineTune(model, criterion, optimizer, dataloader, verbose = True):
     confidence_fractions = []
 
     if verbose:
-        for i, batch in tqdm(enumerate(dataloader)):
+        for i, batch in enumerate(dataloader):
             anchors, peers = batch
             anchors = anchors.cuda(non_blocking=True)
             peers = peers.cuda(non_blocking=True)
@@ -583,7 +583,7 @@ def fit_FineTune(hparams_FineTune, output_folder, verbose=False):
     ## main fit steps
     total_losses = []
     total_confidence_fractions = []
-    for epoch in tqdm(range(hparams_FineTune.epochs)):
+    for epoch in range(hparams_FineTune.epochs):
         # 1. train
         losses, confidence_fractions = train_FineTune(model_FineTune, criterion_FineTune, optimizer_FineTune, dataloader_FineTune, verbose=False)
         # update lr
@@ -602,9 +602,9 @@ def fit_FineTune(hparams_FineTune, output_folder, verbose=False):
     np.save(output_folder + '/losses_FineTune.npy', total_losses)
     total_confidence_fractions = np.array(total_confidence_fractions).flatten()
     np.save(output_folder + '/confidence_fractions_FineTune.npy', total_confidence_fractions)
-    if verbose:
-        plot_losses(total_losses.shape[0], total_losses, 'iterations', 'loss', 'total losses')
-        plot_losses(total_confidence_fractions.shape[0], total_confidence_fractions, 'iterations', 'confidence fractions', 'total confidence fractions')
+    # if verbose:
+    #     plot_losses(total_losses.shape[0], total_losses, 'iterations', 'loss', 'total losses')
+    #     plot_losses(total_confidence_fractions.shape[0], total_confidence_fractions, 'iterations', 'confidence fractions', 'total confidence fractions')
     return model_FineTune, total_losses, total_confidence_fractions
 
 #===================================
@@ -627,7 +627,7 @@ class get_torch_dataset(Dataset):
         return self.n_samples
 
     def __getitem__(self, index):
-        if training_data[0].shape[0] == 2:
+        if self.X[0].shape[0] == 2:
             x = self.preprocess(self.X[index][0])
         else:
             x = self.preprocess(self.X[index])

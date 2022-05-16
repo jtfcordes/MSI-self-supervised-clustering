@@ -119,7 +119,7 @@ class CLR(nn.Module):
     def __init__(self, embedding_size=1024):
         super().__init__()
         
-        base_model = EfficientNet.from_pretrained("efficientnet-b0")
+        base_model = EfficientNet.from_pretrained("efficientnet-b0", in_channels=1)
         internal_embedding_size = base_model._fc.in_features
         base_model._fc = self.Identity() 
         
